@@ -37,8 +37,6 @@ const lesson = document.querySelector("#lesson");
 const personaFields = document.querySelector("#persona-fields");
 const system = document.querySelector("#system");
 const temperature = document.querySelector("#temperature");
-const code = document.querySelector("#code");
-const settings = document.querySelector("#live-settings");
 const availability = document.querySelector("#availability");
 const status = document.querySelector("#status");
 const output = document.querySelector("#result");
@@ -116,7 +114,7 @@ fetch("/api/chat", { signal: AbortSignal.timeout(5000) })
   .then(data => {
     liveEnabled = data.live_enabled;
     availability.textContent = liveEnabled
-      ? "Live Groq is enabled. Enter the demo access code to send a request."
+      ? "Live Groq is enabled. Run an exercise to send a request."
       : "Live Groq is disabled. All four built-in examples are available.";
   })
   .catch(() => { availability.textContent = "The live API status is unavailable. Built-in examples still work."; });
@@ -126,12 +124,6 @@ form.addEventListener("submit", async (event) => {
   if (run.disabled) return;
   if (liveEnabled === false) {
     show("Live Groq is disabled. Try a built-in example.");
-    return;
-  }
-  if (!code.value.trim()) {
-    settings.open = true;
-    code.focus();
-    show("Enter the demo access code to run a live request.");
     return;
   }
 
@@ -155,16 +147,12 @@ form.addEventListener("submit", async (event) => {
   try {
     const response = await fetch("/api/chat", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "X-Demo-Access-Code": code.value.trim() },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(28_000),
     });
     const data = await response.json();
     if (!response.ok) {
-      if (response.status === 403) {
-        settings.open = true;
-        code.focus();
-      }
       show(data.error || "Live request failed. Try the built-in example.");
       return;
     }

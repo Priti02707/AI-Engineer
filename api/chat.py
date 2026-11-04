@@ -1,6 +1,5 @@
 """Run the repository's four engineering exercises through a server-side API."""
 
-import hmac
 import json
 import os
 from concurrent.futures import ThreadPoolExecutor
@@ -22,12 +21,8 @@ TICKET_SCHEMA = {
 MODES = ("chat", "persona", "tokens", "ticket")
 
 
-def credentials():
-    key = os.environ.get("GROQ_API_KEY", "").strip()
-    code = os.environ.get("DEMO_ACCESS_CODE", "").strip()
-    if not key or not 24 <= len(code) <= 128 or not code.isascii():
-        return "", ""
-    return key, code
+def groq_api_key():
+    return os.environ.get("GROQ_API_KEY", "").strip()
 
 
 def validated_text(value, limit, label):
@@ -132,19 +127,15 @@ class handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_GET(self):
-        key, _ = credentials()
+        key = groq_api_key()
         self.respond(200, {"live_enabled": bool(key)})
 
     def do_POST(self):
-        api_key, access_code = credentials()
+        api_key = groq_api_key()
         if not api_key:
             self.respond(503, {"error": "Live Groq mode is disabled. Try the built-in example."})
             return
 
-        supplied = self.headers.get("X-Demo-Access-Code", "")
-        if not hmac.compare_digest(supplied.encode(), access_code.encode()):
-            self.respond(403, {"error": "A valid demo access code is required."})
-            return
         if self.headers.get_content_type() != "application/json":
             self.respond(415, {"error": "Send application/json."})
             return

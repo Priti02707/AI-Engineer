@@ -15,11 +15,10 @@ Use Python 3.12 and run `python serve.py` from the repository root. Open <http:/
 
 | Server environment variable | Purpose |
 | --- | --- |
-| `GROQ_API_KEY` | Enables live exercises together with the demo access code. Keep this key on the server. |
-| `DEMO_ACCESS_CODE` | Private, random 24–128 character ASCII code. Enter this code in the browser to authorize live requests. |
+| `GROQ_API_KEY` | Enables live exercises. Keep this key on the server. |
 | `GROQ_MODEL` | Optional. Defaults to `openai/gpt-oss-20b`. For overrides, use a chat model that supports JSON Object Mode. |
 
-Generate a code with `python -c 'import secrets; print(secrets.token_urlsafe(32))'`. Export the variables before starting the local server. Live inputs are sent to Groq, so use synthetic data for tickets. The default model uses strict JSON Schema for tickets. Model overrides use JSON Object Mode and the server applies the same field validation. A token comparison makes one model request per prompt, up to three.
+Export the variables before starting the local server. Live inputs are sent to Groq, so use synthetic data for tickets. The default model uses strict JSON Schema for tickets. Model overrides use JSON Object Mode and the server applies the same field validation. A token comparison makes one model request per prompt, up to three.
 
 ## Run the original Python lessons
 

@@ -32,12 +32,7 @@
         <label for="prompt" id="prompt-label">Prompt</label>
         <textarea id="prompt" maxlength="2000" required></textarea>
         <p id="availability" class="note" role="status">Checking whether live Groq requests are enabled…</p>
-        <details id="live-settings">
-          <summary>Live demo access</summary>
-          <label for="code">Demo access code</label>
-          <input id="code" type="password" maxlength="128" autocomplete="off">
-          <p class="note">Live requests send your input to Groq. Use synthetic details for tickets.</p>
-        </details>
+        <p class="note">Live requests send your input to Groq. Use synthetic details for tickets.</p>
         <div class="actions">
           <button type="button" id="sample" class="secondary">Show built-in example</button>
           <button id="run">Run with Groq</button>

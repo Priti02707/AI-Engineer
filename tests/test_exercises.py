@@ -40,7 +40,7 @@ class ExerciseTests(TestCase):
             with self.assertRaises(ValueError):
                 completion("test", DEFAULT_MODEL, "ticket", "Synthetic ticket")
 
-    def test_local_http_access_and_all_four_lessons(self):
+    def test_local_http_all_four_lessons_with_only_server_key(self):
         def groq_reply(request, timeout):
             payload = json.loads(request.data)
             self.assertEqual(request.get_header("Authorization"), "Bearer test-key")
@@ -62,11 +62,10 @@ class ExerciseTests(TestCase):
             worker.start()
             base = f"http://127.0.0.1:{server.server_port}"
             client = build_opener(ProxyHandler({}))
-            code = "private-test-code-for-local-only"
 
-            def post(payload, supplied=""):
+            def post(payload):
                 request = Request(base + "/api/chat", data=json.dumps(payload).encode(), headers={
-                    "Content-Type": "application/json", "X-Demo-Access-Code": supplied,
+                    "Content-Type": "application/json",
                 })
                 try:
                     response = client.open(request, timeout=5)
@@ -85,18 +84,17 @@ class ExerciseTests(TestCase):
                     with client.open(base + "/api/chat", timeout=5) as response:
                         self.assertEqual(json.load(response), {"live_enabled": False})
                     self.assertEqual(post(chat)[0], 503)
-                env = {"GROQ_API_KEY": "test-key", "DEMO_ACCESS_CODE": code}
+                env = {"GROQ_API_KEY": "test-key"}
                 with patch.dict(os.environ, env, clear=True), patch("api.chat.urlopen", side_effect=groq_reply) as provider:
                     with client.open(base + "/api/chat", timeout=5) as response:
                         self.assertEqual(json.load(response), {"live_enabled": True})
-                    self.assertEqual(post(chat)[0], 403)
-                    self.assertEqual(post({"mode": "tokens", "prompts": ["x"] * 4}, code)[0], 400)
+                    self.assertEqual(post({"mode": "tokens", "prompts": ["x"] * 4})[0], 400)
                     provider.assert_not_called()
-                    self.assertEqual(post(chat, code)[1]["result"], "Reply to Hello")
+                    self.assertEqual(post(chat)[1]["result"], "Reply to Hello")
                     persona = {"mode": "persona", "prompt": "Help", "system": "Act as a tutor", "temperature": 0.25}
-                    self.assertEqual(post(persona, code)[1]["result"], "Tutor reply")
-                    self.assertEqual(post({"mode": "ticket", "prompt": "Synthetic example"}, code)[1]["result"]["email"], "")
-                    status, payload = post({"mode": "tokens", "prompts": ["short", "long", "third"]}, code)
+                    self.assertEqual(post(persona)[1]["result"], "Tutor reply")
+                    self.assertEqual(post({"mode": "ticket", "prompt": "Synthetic example"})[1]["result"]["email"], "")
+                    status, payload = post({"mode": "tokens", "prompts": ["short", "long", "third"]})
                     self.assertEqual(status, 200)
                     self.assertEqual([row["prompt"] for row in payload["result"]], ["short", "long", "third"])
                     self.assertTrue(all(row["total_tokens"] == 7 for row in payload["result"]))

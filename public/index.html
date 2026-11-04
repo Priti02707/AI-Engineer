@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore prompts and structured support-ticket extraction.">
+  <title>AI Engineering Exercises</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">Interactive exercises</p>
+    <h1>AI Engineering Exercises</h1>
+    <p class="intro">Compare a plain-text chat reply with a support ticket in JSON. Explore a built-in example or run your own prompt with Groq.</p>
+    <section class="panel" aria-label="Exercise">
+      <form id="exercise">
+        <label for="mode">Exercise</label>
+        <select id="mode">
+          <option value="chat">Chat completion</option>
+          <option value="ticket">Support ticket extraction</option>
+        </select>
+        <label for="prompt">Prompt or ticket</label>
+        <textarea id="prompt" maxlength="2000" required></textarea>
+        <label for="code">Live demo access code</label>
+        <input id="code" type="password" maxlength="128" autocomplete="off" required>
+        <p class="note">Live requests send your prompt to Groq. Use synthetic tickets for this exercise.</p>
+        <div class="actions">
+          <button type="button" id="sample" class="secondary">Show built-in example</button>
+          <button id="run">Run with Groq</button>
+        </div>
+      </form>
+    </section>
+    <section class="panel" aria-labelledby="result-title">
+      <h2 id="result-title">Output</h2>
+      <p id="status" role="status">Choose an exercise and show its example to get started.</p>
+      <pre id="result"></pre>
+    </section>
+  </main>
+</body>
+</html>

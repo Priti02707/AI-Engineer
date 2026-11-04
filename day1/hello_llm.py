@@ -9,7 +9,7 @@ if not my_api_key:
     raise ValueError("GROQ_API_KEY environment variable is not set.")
 
 client = Groq(api_key=my_api_key)
-model = "llama-3.3-70b-versatile"
+model = os.getenv("GROQ_MODEL", "").strip() or "openai/gpt-oss-20b"
 role = "user"
 prompt = "Write a short poem about the beauty of nature."
 message = {

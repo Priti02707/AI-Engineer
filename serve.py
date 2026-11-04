@@ -8,6 +8,12 @@ from api.chat import handler
 
 
 class LocalHandler(handler, SimpleHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == "/api/chat":
+            super().do_GET()
+        else:
+            SimpleHTTPRequestHandler.do_GET(self)
+
     def do_POST(self):
         if self.path != "/api/chat":
             self.respond(404, {"error": "Unknown endpoint."})

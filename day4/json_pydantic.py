@@ -36,7 +36,7 @@ message_system={
     "content": system_prompt
 }
 
-text = "Hello my name is Priti. I have an iphone which is not working at all. My address is Noida. My email is abc@gmail.com. Ny contact number is 7667964156."
+text = "My name is Casey Morgan. My keyboard disconnects after sleep. Email me at casey@example.com."
 prompt=f"""
 This is a customer ticket. Please extract the personal information from this.
 {text}

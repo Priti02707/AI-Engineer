@@ -20,3 +20,9 @@ a { color: var(--accent); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 pre { font: .9rem/1.6 ui-monospace, monospace; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; }
 :root { --accent: #d8c5fc; }
+details { margin-top: .85rem; }
+summary { color: var(--accent); cursor: pointer; overflow-wrap: anywhere; }
+details pre { margin-top: .5rem; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+caption { text-align: left; font-weight: 650; margin-bottom: .4rem; }
+th, td { text-align: start; border-bottom: 1px solid #617580; padding: .4rem .25rem; }
